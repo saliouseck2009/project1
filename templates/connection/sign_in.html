@@ -1,0 +1,20 @@
+{% extends "connection/conn_template.html" %}
+{% block title %} {{title_in}} {%endblock title%}
+
+{% block sign %}
+      <form method="POST" action="{{url_for('home')}}">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="username" class="form-control" id="username" name="username">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" class="form-control" id="password" name="password">
+        </div>
+        <div class="form-group ">
+            <a href="{{url_for('sign_up')}}">Sign up </a>
+        </div>
+        <div class="form-group form-check">
+        <button type="submit" class="btn btn-primary">Sign in</button>
+      </form>
+{% endblock sign %}}

@@ -1,0 +1,17 @@
+{% extends "connection/conn_template.html" %}
+{% block title %} {{title_succ}} {%endblock title%}
+
+{% block sign %}
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        
+        <div class="alert alert-success" role="alert">
+            <li>{{ message }}</li><a href="{{url_for('sign_in')}}" class="alert-link"> Click to Sign in</a>. 
+        </div>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+{% endblock sign %}}

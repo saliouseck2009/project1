@@ -2,3 +2,10 @@ Flask
 Flask-Session
 psycopg2-binary
 SQLAlchemy
+
+#good read api keys
+# key: EGg09TETdsx6k7NS8aheJw
+# secret: cvdgvOj7eVHQLSwNjEAroccNecycNVlOwymJZwUZc0
+
+# import requests
+# res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "EGg09TETdsx6k7NS8aheJw", "isbns": "9781632168146"})
