@@ -9,3 +9,9 @@ SQLAlchemy
 
 # import requests
 # res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "EGg09TETdsx6k7NS8aheJw", "isbns": "9781632168146"})
+
+
+#export DATABASE_URL='postgres://zyixysspleqiwj:b726f330c847e132a5034c34d28051dc5ddcf3917ec5753f1da8f78b96cac334@ec2-46-137-84-173.eu-west-1.compute.amazonaws.com:5432/d736pv9i3rkvcg'
+
+
+#https://openlibrary.org/dev/docs/api/covers

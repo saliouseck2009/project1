@@ -10,7 +10,6 @@ from werkzeug.security import generate_password_hash,check_password_hash
 app = Flask(__name__)
 
 
-
 # Check for environment variable
 if not os.getenv("DATABASE_URL"):
     raise RuntimeError("DATABASE_URL is not set")
@@ -27,7 +26,7 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/")
 def sign_in():
-
+    
     return render_template("connection/sign_in.html",title_in="Sign in")
 
 @app.route("/sign_up")
@@ -36,21 +35,21 @@ def sign_up():
 
 @app.route('/success',methods=['POST','GET'])
 def success():
+    
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
-        password = request.form['password']
-        print(username)
-        print(email)
-        print(password)
+        password = request.form['password']     
         
-        if username == None or email == None or password == None:
-            
-            render_template('connection/sign_up.html',title="Sign up",message="Veillez renseigner tous les champ")        
+        if username == "" or email == "" or password == "":
+            flash("Veillez renseigner tous les champ")
+            return redirect(url_for('sign_up'))       
         
-        # Make sure username exists.
+        # Make sure username exists
+        
         if db.execute("SELECT * FROM users WHERE username = :username", {"username": username}).rowcount != 0:
-            return render_template('connection/sign_up.html',title="Sign up",message="Le login est deja utiliser")
+            flash("Username already use ")
+            return redirect(url_for('sign_up'))
         
         #Insert a new user
         db.execute("INSERT INTO users (username, email,password) VALUES (:username, :email, :password)",
@@ -64,6 +63,29 @@ def success():
 
 
 
-@app.route('/home')
+@app.route('/home', methods=['POST'])
 def home():
-   return "BIENVENUE DANS LA PAGE DE CONNECTION"
+    username = request.form['username']
+    password = request.form['password']
+    
+    # if username == "" or password == "":
+    #         flash("Please complete all field")
+    #         return redirect(url_for('sign_in'))    
+    if not username:
+        flash('Username is required.')
+        return redirect(url_for('sign_in'))
+    elif not password:
+        flash('Password is required.')
+        return redirect(url_for('sign_in'))
+    
+    user = db.execute("SELECT * FROM users WHERE username = :username", {"username": username}).fetchone()
+    if check_password_hash(user.password,password):
+        return render_template('page/index.html',title='title')    
+    else:        
+        flash("Bad Username or Password ")
+        return redirect(url_for('sign_in'))
+    
+    
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('error/404.html'), 404

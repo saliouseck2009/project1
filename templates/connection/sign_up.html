@@ -3,6 +3,24 @@
 
 {% block sign %}
 
+<!---------------------------ERROR MESSAGE   ----------------------->
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        
+        <div class="alert alert-warning" role="alert">
+            <li>{{ message }}</li> 
+        </div>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+
+
+
+<!--------------------------SIGN UP FORM  ----------------------->
 <form action="{{url_for('success')}}" method="POST">
     <div class="form-group">
       <label for="email">Email address</label>

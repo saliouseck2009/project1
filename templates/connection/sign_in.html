@@ -2,6 +2,24 @@
 {% block title %} {{title_in}} {%endblock title%}
 
 {% block sign %}
+    <!--------------ERROR CONNECTION------------------- -->
+    <!---------------------------ERROR MESSAGE   ----------------------->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        
+        <div class="alert alert-warning" role="alert">
+            <li>{{ message }}</li> 
+        </div>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+
+
+    <!------------------ SIGN UP FORM  -------------------->
       <form method="POST" action="{{url_for('home')}}">
         <div class="form-group">
           <label for="username">Username</label>
