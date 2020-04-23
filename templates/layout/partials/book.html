@@ -1,0 +1,14 @@
+<div class="row row-cols-1 row-cols-md-3">
+    {% for book  in books  %}       
+    <div class="col mb-4">
+        <div class="card">
+            <img src="http://covers.openlibrary.org/b/isbn/{{book.isbn}}-M.jpg" class="card-img-top" alt="{{book.title}}" width="338px" height="500px">
+            <div class="card-body">
+            <h5 class="card-title">Title : {{book.title}}</h5>
+            <h6 class="card-text">Author : {{book.author }}</h6>
+            <h6 class="card-text">Year : {{book.year }}</h6>
+            </div>
+        </div>
+    </div>
+    {% endfor %}      
+</div>

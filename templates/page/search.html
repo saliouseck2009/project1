@@ -1,22 +1,24 @@
 {% extends "layout/default.html" %}
 
-{% block title %}Readers{% endblock title %} </title>
+{% block title %}All books{% endblock title %} </title>
 
 {% block body %}
 <div class="container ">
 
+    
     <!-- -------------------------SLIDER ------------------------------>
     {% include 'layout/partials/slider.html' %}
 
-    
-
+    <!-- -------------------------- SEARCH------------------------- -->
+    {% include "layout/partials/search_bar.html" %}
     <!-- ---------------------------- BOOK --------------------->
-    <div class="row row-cols-1 row-cols-md-3">
-        {% for book  in books  %}       
-            {% include "layout/partials/book.html" %} 
-        {% endfor %}      
-    </div>
-</div>  
+        
+    {% include "layout/partials/book.html" %} 
+      
+ 
+
+</div> 
+
 {% endblock body %}
 
     
