@@ -7,6 +7,8 @@ SQLAlchemy
 # key: EGg09TETdsx6k7NS8aheJw
 # secret: cvdgvOj7eVHQLSwNjEAroccNecycNVlOwymJZwUZc0
 
+http://covers.librarything.com/devkey/6910d4a75ddcb39c675dd03b7cddf30e/large/isbn/0545010225
+#library key:6910d4a75ddcb39c675dd03b7cddf30e
 # import requests
 # res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "EGg09TETdsx6k7NS8aheJw", "isbns": "9781632168146"})
 

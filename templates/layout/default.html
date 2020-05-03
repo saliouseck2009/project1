@@ -5,28 +5,28 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="{{url_for('static',filename='css/connected/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/connected/style.css') }}">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    
+
 
     <title>{% block title %}Readers{% endblock title %} </title>
 </head>
 <body>
-    
+    <div class="separator">
             <!-- Navigation -->
-    {% include "layout/partials/nav.html" %}  
-          
-            
+    {% include "layout/partials/nav.html" %}
+        
+    </div>
+
     <div class="container">
-        {%block body %} 
-                <!-- ------------------------------SLIDER -------------------------------- -->
-                
-    
-               
+        {%block body %}
         {%endblock%}
-            </div>
+    </div>
+
+        {% include 'layout/partials/footer.html' %}
+
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
