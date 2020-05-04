@@ -9,7 +9,50 @@
     margin-bottom: 50px;
 }
 
+/* ---------navbar ----------------------- */
+#mainNav{
+    background-color: #F0F8FF!important;
+}
 
+/* ----------------------------- */
+
+body{
+    background: rgb(238,174,202);
+    background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,183,233,1) 100%);
+  }
+  /*----------reader profile-------*/
+  #body{
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #F0F8FF;
+    width: 100%
+    
+  }
+  .img{
+    width: 300px;
+    flex-shrink: 2;
+    margin:30px;
+  }
+  .desc{
+    width: 500px;
+    margin:30px;
+  }
+  .review{
+    border: 1px solid #F0F8FF;
+    border-radius:15px;
+    margin: 15px;
+    padding:10px;
+  }
+  .more-info{
+    background-color: #F0F8FF;
+    margin:30px;
+    width: 900px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  
+  /*star style*/
 /* -----------------------STRYLE FOR STAR -------------------------------- */
 .star{
     color: goldenrod;
@@ -39,8 +82,15 @@
 /* -------------------------------------------------------------------------- */
 
 /* ---------------------------search bar------------------------------------- */
+#search-bar{
+    display: flex;
+    justify-self: flex-end;
+}
 /* ------------------footer--------------------------- */
 #sticky-footer {
     flex-shrink: none;
-  }
+    background-color: #F0F8FF!important;
+    margin-top: 50px;
+}
+
 /* ---------------------------------------------------- */
