@@ -77,7 +77,7 @@ def home():
             flash('Password is required.')
             return redirect(url_for('sign_in'))
 
-        user = db.execute("SELECT * FROM users WHERE username = :username", {"username": username}).fetchone()
+        user = db.execute("SELECT * FROM users WHERE LOWER(username) = LOWER(:username)", {"username": username}).fetchone()
         if not user :
             flash('invalid Username')
             return redirect(url_for('sign_in'))
@@ -101,6 +101,20 @@ def home():
             return redirect(url_for('sign_in'))        
 
 
+
+
+def pagination(page,count):
+    pages = count//12        
+    prev_url = url_for('all', id=page-1) if page > 1 else None
+    next_url = url_for('all', id=page+1) if page < pages else None
+    tab_prev =dict()
+    tab_next =dict()
+    tab_prev['previous']=prev_url
+    tab_prev['status']= "disabled" if prev_url is None else ""
+    tab_next['next']=next_url
+    tab_next['status']= "disabled" if next_url is None else ""
+    return (tab_next, tab_prev)
+
 @app.route('/all/<int:id>')
 def all(id):
     if 'id' in session:
@@ -113,15 +127,8 @@ def all(id):
         offset = (page-1)*per_page
         limit = 20 if page == pages else per_page
         books = db.execute('SELECT * FROM books ORDER BY title LIMIT :limit OFFSET :offset ',{"limit":limit,"offset":offset})
-        prev_url = url_for('all', id=page-1) if page > 1 else None
-        next_url = url_for('all', id=page+1) if page < pages else None
-        tab_prev =dict()
-        tab_next =dict()
-        tab_prev['previous']=prev_url
-        tab_prev['status']= "disabled" if prev_url is None else ""
-        tab_next['next']=next_url
-        tab_next['status']= "disabled" if next_url is None else ""
-        return render_template('page/all.html', books = books, tab_next=tab_next, tab_prev = tab_prev)
+        paginate = pagination(page,count)
+        return render_template('page/all.html', books = books, tab_next=paginate[0], tab_prev = paginate[1])
     else:
         flash('You must be connected to get this page')
         return redirect(url_for('sign_in'))
@@ -141,29 +148,28 @@ def sign_out():
 def search():
     if 'id' in session:
         text = request.form['text']
-        isbn_pattern=r'((?P<isb10>^[\w]{10}$)|(?P<isb13>^[\d]{13}$))'
+        isbn_pattern=r'((?P<isb10>^[\d]{10}$)|(?P<isb13>^[\d]{13}$))'
         compiler = re.compile(isbn_pattern)
         result = compiler.match(text)
+        books=None
+        
         if result is not None :
             if result.group('isb10'):
-                books = db.execute('SELECT * FROM books WHERE isbn= :text ' ,{'text':text}).fetchone()
-                #A changer
-                if books:
-                    return render_template('page/search.html',books=books)
+                books = db.execute('SELECT * FROM books WHERE LOWER(isbn)= LOWER(:text) ' ,{'text':text}).fetchall()
 
+        if not books:
+            books = db.execute('SELECT * FROM books WHERE LOWER(title)= LOWER(:text) OR LOWER(author)= LOWER(:text)',{'text':text}).fetchall()
+        if not books :
+            text = "%"+text+"%"
+            books = db.execute('SELECT * FROM books WHERE LOWER(title) LIKE LOWER(:text) OR LOWER(isbn) LIKE LOWER(:text) OR LOWER(author) LIKE LOWER(:text)',{'text':text}).fetchall()
+        if not books:
+            flash('Book not found')
+            return redirect(url_for('not_found_book'))
         else:
-            books = db.execute('SELECT * FROM books WHERE title= :text OR author= :text',{'text':text}).fetchall()
-            if books:
-                return render_template('page/search.html',books=books)
-            else:
-                text = "%"+text+"%"
-                books = db.execute('SELECT * FROM books WHERE title LIKE :text OR isbn LIKE :text OR author LIKE :text',{'text':text}).fetchall()
-                if books :
-                    return render_template('page/search.html',books=books)
-                else:
-                    print(text)
-                    flash('Book not found')
-                    return redirect(url_for('not_found_book'))
+            page=1
+            count=len(books)
+            paginate = pagination(page,count)
+            return render_template('page/search.html',books=books,  tab_next=paginate[0], tab_prev = paginate[1])
     else:
         flash('You must be connected to get this page')
         return redirect(url_for('sign_in'))

@@ -15,6 +15,12 @@
     {% include "layout/partials/book.html" %} 
       
  
+    <!-- ------------------------------PAGINATION-------------------------------------- -->
+    <ul class="pagination justify-content-center">
+        <li class="page-item {{tab_prev.status}}"><a class="page-link" href="{{tab_prev.previous}}">Previous</a></li>
+        <li class="page-item {{tab_next.status}}"><a class="page-link" href="{{tab_next.next}}">Next</a></li>          
+    </ul>
+
 
 
 {% endblock body %}
