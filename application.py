@@ -196,7 +196,6 @@ def book_view(id):
         book = db.execute('SELECT * FROM books WHERE id=:id',{'id':id}).fetchone()
         posts=db.execute("""SELECT username, text, rating_scale FROM users INNER JOIN reviews ON users.id = reviews.id_user WHERE
         reviews.id_book in (SELECT id from books WHERE id=:id)""",{'id':id}).fetchall();
-
         #format post for each bo
 
         res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "EGg09TETdsx6k7NS8aheJw", "isbns": book.isbn})
