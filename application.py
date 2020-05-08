@@ -238,3 +238,18 @@ def page_not_found(error):
     else:
         flash('You must be connected to get this page')
         return redirect(url_for('sign_in'))
+
+@app.route("/review", methods=["POST"])
+def posts():
+    rate = int(request.form.get("rate") or 2)
+    text = request.form.get("text") 
+    id_book = request.form.get('id_book')
+    if db.execute('SELECT * FROM reviews WHERE id_book=:id_book',{'id_book':id_book}).rowcount > 1:
+        return "you can't write two review for one book "
+    db.execute('INSERT INTO reviews(rating_scale, text, id_user,id_book) VALUES (:rating_scale, :text, :id_user, :id_book)',\
+            {'rating_scale':rate, 'text':text, 'id_user':session['id'], 'id_book':id_book})
+    db.commit()
+    # Generate list of posts.
+    data = {"rate":rate, "text":text}
+    # Return list of posts.
+    return jsonify(data)
