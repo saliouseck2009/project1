@@ -5,7 +5,8 @@ from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from werkzeug.security import generate_password_hash,check_password_hash
-from datetime import timedelta
+from datetime import timedelta,datetime
+from time import strftime
 
 app = Flask(__name__)
 
@@ -76,7 +77,6 @@ def home():
         if not password:
             flash('Password is required.')
             return redirect(url_for('sign_in'))
-
         user = db.execute("SELECT * FROM users WHERE LOWER(username) = LOWER(:username)", {"username": username}).fetchone()
         if not user :
             flash('invalid Username')
@@ -245,13 +245,13 @@ def posts():
     rate = int(request.form.get("rate") or 2)
     text = request.form.get("text") 
     id_book = request.form.get("id_book")
-    print(id_book)
-    if db.execute('SELECT * FROM reviews WHERE id_book=:id_book',{'id_book':id_book}).rowcount > 1:
-        return "you can't write two review for one book "
+    if db.execute('SELECT * FROM reviews WHERE id_book=:id_book',{'id_book':id_book}).rowcount > 0:
+        data = {'error' : "you can't write two review for one book "}
+        return jsonify(data)
+    date=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     db.execute('INSERT INTO reviews(rating_scale, text, id_user,id_book) VALUES (:rating_scale, :text, :id_user, :id_book)',\
             {'rating_scale':rate, 'text':text, 'id_user':session['id'], 'id_book':id_book})
     db.commit()
-    # Generate list of posts.
-    data = {"rate":rate, "text":text}
-    # Return list of posts.
+    user = db.execute('SELECT user FROM users WHERE id=:id',{'id':session['id']}).fetchone()
+    data = {"rate":rate, "text":text, 'user':user,'date':date}
     return jsonify(data)
