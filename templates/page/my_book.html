@@ -1,40 +1,39 @@
-
-    <div class="container">
-        <h1>Cartes</h1>
-        <div class="card" style="width: auto;">
-            <img src="http://covers.openlibrary.org/b/isbn/{{book.isbn}}-L.jpg" class="card-img-top" alt="{{book.title}}" width="500px">
-            <div class="card-body">
-                <h2 class="card-title">Title : {{book.title}}</h2>
-                <h3 class="card-subtitle">Author : {{book.author}}</h3>
-                <h3 class="card-subtitle">ISBN : {{book.isbn}}</h3>
-                <h3 class="card-subtitle">Publication year : {{book.year}}</h3>
-                <h3 class="card-subtitle">Average rating : {{data.average_rating}}</h3>
-                <h3 class="card-subtitle">Number of rating : {{data.ratings_count}}</h3>
-                <p class="card-text">Du texte sous le titre dans le corps de carte</p>
-                <a href="#" class="btn btn-primary">Un lien</a>
-            </div>
-        </div>
-        <form method="POST" action="{{ url_for('book_view',id = book.id) }}">
-        <div class="form-group">
-            <label for="exampleFormControlTextarea1">Example textarea</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="text"></textarea>
-            <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref" name="rating_scale">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </select>
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </div>
-        </form>
-        <h1>Posts about this book</h1>
-        <div>
-          {% for post in posts %}
-          <h3>{{post.username}}</h3>
-            <p>{{post.text}}</p>
-          {% endfor %}
-        </div>
-
-
+<div class="container">
+  <h1>Cartes</h1>
+  <div class="card" style="width: auto;">
+      <img src="http://covers.openlibrary.org/b/isbn/{{book.isbn}}-L.jpg" class="card-img-top" alt="{{book.title}}" width="500px">
+      <div class="card-body">
+          <h2 class="card-title">Title : {{book.title}}</h2>
+          <h3 class="card-subtitle">Author : {{book.author}}</h3>
+          <h3 class="card-subtitle">ISBN : {{book.isbn}}</h3>
+          <h3 class="card-subtitle">Publication year : {{book.year}}</h3>
+          <h3 class="card-subtitle">Average rating : {{data.average_rating}}</h3>
+          <h3 class="card-subtitle">Number of rating : {{data.ratings_count}}</h3>
+          <p class="card-text">Du texte sous le titre dans le corps de carte</p>
+          <a href="#" class="btn btn-primary">Un lien</a>
+      </div>
+  </div>
+  <form method="POST" action="{{ url_for('book_view',id = book.id) }}">
+  <div class="form-group">
+      <label for="exampleFormControlTextarea1">Example textarea</label>
+      <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="text"></textarea>
+      <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref" name="rating_scale">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+      </select>
+      <button type="submit" class="btn btn-primary">Submit</button>
     </div>
+  </form>
+  <h1>Posts about this book</h1>
+  <div>
+    {% for post in posts %}
+    <h3>{{post.username}}</h3>
+      <p>{{post.text}}</p>
+    {% endfor %}
+  </div>
+
+
+</div>

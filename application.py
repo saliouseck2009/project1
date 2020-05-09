@@ -188,11 +188,12 @@ def not_found_book():
 def book_view(id):
     if "id" in session:
         if request.method == 'POST':
-            text = request.form['text']
-            rating_scale =request.form['rating_scale']
-            db.execute('INSERT INTO reviews(rating_scale, text, id_user,id_book) VALUES (:rating_scale, :text, :id_user, :id_book)',
-            {'rating_scale':rating_scale, 'text':text, 'id_user':session['id'], 'id_book':id})
-            db.commit()
+            #text = request.form['text']
+            #rating_scale =request.form['rating_scale']
+            #db.execute('INSERT INTO reviews(rating_scale, text, id_user,id_book) VALUES (:rating_scale, :text, :id_user, :id_book)',
+            #{'rating_scale':rating_scale, 'text':text, 'id_user':session['id'], 'id_book':id})
+            #db.commit()
+            pass
         book = db.execute('SELECT * FROM books WHERE id=:id',{'id':id}).fetchone()
         posts=db.execute("""SELECT username, text, rating_scale FROM users INNER JOIN reviews ON users.id = reviews.id_user WHERE
         reviews.id_book in (SELECT id from books WHERE id=:id)""",{'id':id}).fetchall();
@@ -243,7 +244,8 @@ def page_not_found(error):
 def posts():
     rate = int(request.form.get("rate") or 2)
     text = request.form.get("text") 
-    id_book = request.form.get('id_book')
+    id_book = request.form.get("id_book")
+    print(id_book)
     if db.execute('SELECT * FROM reviews WHERE id_book=:id_book',{'id_book':id_book}).rowcount > 1:
         return "you can't write two review for one book "
     db.execute('INSERT INTO reviews(rating_scale, text, id_user,id_book) VALUES (:rating_scale, :text, :id_user, :id_book)',\
