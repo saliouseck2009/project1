@@ -50,8 +50,15 @@ body{
     display: flex;
     flex-direction: column;
 }
-  
-  
+.stats{
+    border: 1px solid #000;
+    border-radius:15px;
+    margin: 15px;
+    padding:10px;
+}
+#text_right{
+    text-align: right!important;
+}
   /*star style*/
 /* -----------------------STRYLE FOR STAR -------------------------------- */
 .star{

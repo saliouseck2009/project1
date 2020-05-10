@@ -79,11 +79,11 @@ def home():
             return redirect(url_for('sign_in'))
         user = db.execute("SELECT * FROM users WHERE LOWER(username) = LOWER(:username)", {"username": username}).fetchone()
         if not user :
-            flash('invalid Username')
+            flash('invalid credential')
             return redirect(url_for('sign_in'))
         if check_password_hash(user.password, password):
             session['id']=user.id
-            books=db.execute('SELECT * FROM books WHERE id in (SELECT id FROM reviews ORDER BY rating_scale LIMIT 9 )').fetchall()
+            books=db.execute('SELECT * FROM books WHERE id in (SELECT id_book FROM reviews ORDER BY rating_scale LIMIT 9 )').fetchall()
             if len(books) < 9:
                 books=db.execute('SELECT * FROM books LIMIT 9').fetchall()
             return render_template('page/index.html', title='title', books=books) 
@@ -187,17 +187,9 @@ def not_found_book():
 @app.route('/book_view/<string:id>',methods=['POST','GET'])
 def book_view(id):
     if "id" in session:
-        if request.method == 'POST':
-            #text = request.form['text']
-            #rating_scale =request.form['rating_scale']
-            #db.execute('INSERT INTO reviews(rating_scale, text, id_user,id_book) VALUES (:rating_scale, :text, :id_user, :id_book)',
-            #{'rating_scale':rating_scale, 'text':text, 'id_user':session['id'], 'id_book':id})
-            #db.commit()
-            pass
         book = db.execute('SELECT * FROM books WHERE id=:id',{'id':id}).fetchone()
-        posts=db.execute("""SELECT username, text, rating_scale FROM users INNER JOIN reviews ON users.id = reviews.id_user WHERE
-        reviews.id_book in (SELECT id from books WHERE id=:id)""",{'id':id}).fetchall();
-        #format post for each bo
+        posts=db.execute("""SELECT username, text, rating_scale, created_at FROM users INNER JOIN reviews ON users.id = reviews.id_user WHERE
+        reviews.id_book in (SELECT id from books WHERE id=:id) ORDER BY created_at DESC""",{'id':id}).fetchall();
 
         res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "EGg09TETdsx6k7NS8aheJw", "isbns": book.isbn})
         data = dict()
@@ -242,10 +234,14 @@ def page_not_found(error):
 
 @app.route("/review", methods=["POST"])
 def posts():
-    rate = int(request.form.get("rate") or 2)
-    text = request.form.get("text") 
-    id_book = request.form.get("id_book")
-    if db.execute('SELECT * FROM reviews WHERE id_book=:id_book',{'id_book':id_book}).rowcount > 0:
+    try:
+        rate = int(request.form.get("rate") or 2)
+        text = request.form.get("text") 
+        id_book = request.form.get("id_book")
+    except:
+        return{'error' : "invalid information"}
+    
+    if db.execute('SELECT * FROM reviews WHERE id_book=:id_book AND id_user=:id_user',{'id_book':id_book, 'id_user':session['id']}).rowcount > 0:
         data = {'error' : "you can't write two review for one book "}
         return jsonify(data)
     date=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
