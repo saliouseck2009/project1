@@ -187,6 +187,7 @@ def not_found_book():
 @app.route('/book_view/<string:id>',methods=['POST','GET'])
 def book_view(id):
     if "id" in session:
+        session['id_book']=id
         book = db.execute('SELECT * FROM books WHERE id=:id',{'id':id}).fetchone()
         posts=db.execute("""SELECT username, text, rating_scale, created_at FROM users INNER JOIN reviews ON users.id = reviews.id_user WHERE
         reviews.id_book in (SELECT id from books WHERE id=:id) ORDER BY created_at DESC""",{'id':id}).fetchall();
@@ -237,17 +238,27 @@ def posts():
     try:
         rate = int(request.form.get("rate") or 2)
         text = request.form.get("text") 
-        id_book = request.form.get("id_book")
+        #id_book = request.form.get("id_book")
     except:
         return{'error' : "invalid information"}
-    
-    if db.execute('SELECT * FROM reviews WHERE id_book=:id_book AND id_user=:id_user',{'id_book':id_book, 'id_user':session['id']}).rowcount > 0:
-        data = {'error' : "you can't write two review for one book "}
-        return jsonify(data)
+    try:
+        print("idbook",session['id_book'],"id", session['id'])
+        if db.execute('SELECT * FROM reviews WHERE id_book=:id_book AND id_user=:id_user',{'id_book':session['id_book'], 'id_user':session['id']}).rowcount > 0:
+            data = {'error' : "you can't write two review for one book "}
+            return jsonify(data)
+    except :
+        return {'error' : "Sorry we have problem in our server db error check existing review"}        
     date=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    db.execute('INSERT INTO reviews(rating_scale, text, id_user,id_book) VALUES (:rating_scale, :text, :id_user, :id_book)',\
-            {'rating_scale':rate, 'text':text, 'id_user':session['id'], 'id_book':id_book})
-    db.commit()
-    user = db.execute('SELECT user FROM users WHERE id=:id',{'id':session['id']}).fetchone()
-    data = {"rate":rate, "text":text, 'user':user,'date':date}
+    try:
+        db.execute('INSERT INTO reviews(rating_scale, text, id_user, id_book, date, created_at) VALUES (:rating_scale, :text, :id_user, :id_book, :created_at)',\
+            {'rating_scale':rate, 'text':text, 'id_user':session['id'], 'id_book':session['id_book'], 'created_at':date})
+        db.commit()
+    except :
+        return {'error' : "Sorry we have problem in our server db error writing review"}
+    
+    try:
+        user = db.execute('SELECT username FROM users WHERE id=:id',{'id':session['id']}).fetchone()
+    except:
+        return {'error' : "Sorry we have problem in our server db error getting user"}   
+    data = {"rate":rate, "text":text, 'user':user[0],'date':date}
     return jsonify(data)

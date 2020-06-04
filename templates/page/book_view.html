@@ -1,0 +1,95 @@
+{% extends "layout/default.html" %}
+
+{% block title %}{% endblock title %} </title>
+
+{% block body %}
+
+
+    <!-- -------------------------SLIDER ------------------------------>
+    {% include 'layout/partials/slider.html' %}
+
+    <!-- -------------------------- SEARCH------------------------- -->
+    {% include "layout/partials/search_bar.html" %}
+    <!-- ---------------------------- BOOK --------------------->
+    <div class="container" id="box">
+    <div id="body">
+            <div class="img">
+                <img src="http://covers.openlibrary.org/b/isbn/{{book.isbn}}-L.jpg" alt="">
+            </div>
+            <div class="desc">
+                <h1>Title : {{book.title}}</h1>
+                <div>Author : {{book.author}}</div>
+                <div>ISBN : {{book.isbn}}</div>
+                <div>Publication year : {{book.year}}</div>
+                <div>Average rating : {{data.average_rating}}</div>
+                <div class="stats">
+                    <span>rating_scale</span>
+                    <span>Number of rating : {{data.ratings_count}}</span>
+                    <span>reviews</span>
+                </div>
+                <div>From a rising star at The New Yorker , a deeply immersive chronicle of how the optimistic entrepreneurs of Silicon Valley set out to create a free and democratic internetand how the cynical propagandists of the alt-right exploited that freedom to propel the extreme into the mainstream.</div>
+                
+                <div id="gr_add_to_books">
+                <div class="gr_custom_each_container_">
+                    <a target="_blank" style="border:none" rel="nofollow noopener noreferrer" href="https://www.goodreads.com/book/isbn/{{book.isbn}}"><img alt="{{book.author}}" src="https://www.goodreads.com/images/atmb_add_book-70x25.png" /></a>
+                </div>
+                </div>
+                <!-- the identifier in the following script tag can be a GR book id or an isbn -->
+                <script src="https://www.goodreads.com/book/add_to_books_widget_frame/{{book.isbn}}?atmb_widget%5Bbutton%5D=atmb_widget_1.png"></script>
+                
+            </div> 
+            
+            <div class="more-info container">
+                <h1>COMMUNITY REVIEWS</h1>
+                <form method="POST" action="{{ url_for('posts') }}" name="myForm">
+                    <label>My rating</label>
+                <div class="btn-group" role="group" aria-label="First group">
+                        <button id='button_note' type="button" data-rate=1 class="form-control btn btn-outline-primary">1</button>
+                        <button id='button_note' type="button" data-rate=2 class="form-control btn btn-outline-primary">2</button>
+                        <button id='button_note' type="button" data-rate=3 class="form-control btn btn-outline-primary">3</button>
+                        <button id='button_note' type="button" data-rate=4 class="form-control btn btn-outline-primary">4</button>
+                        <button id='button_note' type="button" data-rate=5 class="form-control btn btn-outline-primary">5</button>
+                </div>
+                <br>
+                    <div class="form-group ">
+                        <label for="exampleTextarea">What did you think?</label>
+                        <textarea class="text form-control" name="text" id="exampleTextarea" rows="3" placeholder="Put here your review (Optional)"></textarea>
+                    </div>
+                    <button type="submit" id="send-button" class="btn btn-primary">Post</button>
+                    <div class="duplicate"></div>
+                </form>
+                
+                <div class="review">         
+                    {% for post in posts %}             
+                    <div class="stats">
+                        <span class="h2 text-capitalize">{{post.username}}</span>
+                        <span> rated at{{post.rating_scale}}/5</span>
+                        <span id="text_right">{{post.created_at}}</span>
+                        <div class="lead">{{post.text}}</div>
+                    </div>
+
+                    <!-- <div class="row ml-3 mr-3">
+                        <div class="h2 text-capitalize col">Saliou</div>
+                        <div class="col text-center"> rated at 4/5</div>
+                        <div class="col text-right" id="text_right">posted 2020-06-04 00:41:20</div>
+                    </div>
+                    <div class="border ml-3 mb-3 mr-3 pl-3 pb-3 pr-3 pt-3">
+                        <div>it is a very interesting book</div>
+                    </div> -->
+                        
+                    <!-- <div class="user_review">
+                        <span>{{ nbre_of_like }}</span>
+                        <button>like</button>
+                        <span>reviews</span>
+                    </div> -->
+                    {% endfor %}
+                </div>
+                
+        </div>
+            
+            
+    </div>
+    
+</div>
+    
+{% endblock body %}

@@ -1,0 +1,17 @@
+{% include "layout/partials/search_bar.html" %}
+      
+    {% if not books %}
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            
+            <div class="alert alert-warning" role="alert">
+                <li>{{ message }}</li> 
+            </div>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+        
+      {% endif %}
