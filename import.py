@@ -23,3 +23,8 @@
 # else:
 #     data= res.json()
 #     print(data['books'][0]['id'])
+#export DATABASE_URL='postgres://zyixysspleqiwj:b726f330c847e132a5034c34d28051dc5ddcf3917ec5753f1da8f78b96cac334@ec2-46-137-84-173.eu-west-1.compute.amazonaws.com:5432/d736pv9i3rkvcg'
+source /home/seck/virtual_env/projet1/bin/activate
+export DATABASE_URL='postgres://zyixysspleqiwj:b726f330c847e132a5034c34d28051dc5ddcf3917ec5753f1da8f78b96cac334@ec2-46-137-84-173.eu-west-1.compute.amazonaws.com:5432/d736pv9i3rkvcg'
+export FLASK_ENV=development
+export FLASK_APP=application.py

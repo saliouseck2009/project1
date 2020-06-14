@@ -1,5 +1,4 @@
 import os,re,requests
-
 from flask import Flask, session,render_template,request,flash,redirect,url_for,abort,jsonify
 from flask_session import Session
 from sqlalchemy import create_engine
@@ -9,6 +8,7 @@ from datetime import timedelta,datetime
 from time import strftime
 
 app = Flask(__name__)
+
 
 
 # Check for environment variable
@@ -86,7 +86,7 @@ def home():
             books=db.execute('SELECT * FROM books WHERE id in (SELECT id_book FROM reviews ORDER BY rating_scale LIMIT 9 )').fetchall()
             if len(books) < 9:
                 books=db.execute('SELECT * FROM books LIMIT 9').fetchall()
-            return render_template('page/index.html', title='title', books=books) 
+            return render_template('page/index.html', title='home', books=books) 
         else:
             flash("Bad Username or Password ")
             return redirect(url_for('sign_in'))
@@ -137,7 +137,14 @@ def all(id):
 
 @app.route('/my_book')
 def my_book():
-    pass
+    if 'id' in session:
+        books=db.execute('SELECT * FROM books WHERE id in (SELECT id_book FROM reviews WHERE id_user=:id_user )', {"id_user":session['id']}).fetchall()
+        if len(books) < 1:
+            flash('No review about a book from you')
+            books=db.execute('SELECT * FROM books LIMIT 9').fetchall()
+        return render_template('page/index.html', title='my books', books=books) 
+        
+        
 
 @app.route('/logout')
 def sign_out():
@@ -189,6 +196,10 @@ def book_view(id):
     if "id" in session:
         session['id_book']=id
         book = db.execute('SELECT * FROM books WHERE id=:id',{'id':id}).fetchone()
+        print("before error")
+        if not book:
+            print("in error page")
+            abort(404)
         posts=db.execute("""SELECT username, text, rating_scale, created_at FROM users INNER JOIN reviews ON users.id = reviews.id_user WHERE
         reviews.id_book in (SELECT id from books WHERE id=:id) ORDER BY created_at DESC""",{'id':id}).fetchall();
 
@@ -228,21 +239,19 @@ def api(isbn):
 @app.errorhandler(404)
 def page_not_found(error):
     if 'id' in session:
-        return render_template('error/404.html'), 404
+        return render_template('error/404.html')
     else:
         flash('You must be connected to get this page')
-        return redirect(url_for('sign_in'))
+        return render_template(url_for('sign_in')), 404
 
 @app.route("/review", methods=["POST"])
 def posts():
     try:
         rate = int(request.form.get("rate") or 2)
         text = request.form.get("text") 
-        #id_book = request.form.get("id_book")
     except:
         return{'error' : "invalid information"}
     try:
-        print("idbook",session['id_book'],"id", session['id'])
         if db.execute('SELECT * FROM reviews WHERE id_book=:id_book AND id_user=:id_user',{'id_book':session['id_book'], 'id_user':session['id']}).rowcount > 0:
             data = {'error' : "you can't write two review for one book "}
             return jsonify(data)
@@ -250,7 +259,7 @@ def posts():
         return {'error' : "Sorry we have problem in our server db error check existing review"}        
     date=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     try:
-        db.execute('INSERT INTO reviews(rating_scale, text, id_user, id_book, date, created_at) VALUES (:rating_scale, :text, :id_user, :id_book, :created_at)',\
+        db.execute('INSERT INTO reviews(rating_scale, text, id_user, id_book, created_at) VALUES (:rating_scale, :text, :id_user, :id_book, :created_at)',\
             {'rating_scale':rate, 'text':text, 'id_user':session['id'], 'id_book':session['id_book'], 'created_at':date})
         db.commit()
     except :

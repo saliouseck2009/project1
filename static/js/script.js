@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.onsubmit= ()=>{
         const text = document.querySelector('.text').value;
         formData.append('text', text);
-        // formData.append('id_book', id_book);
         console.log(formData);
         load();
         return false;
@@ -56,27 +55,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const review = document.querySelector('.review');
         review.appendChild(divContent);
 
-        const span_username = document.createElement("span");
-        span_username.setAttribute('class','h2 text-capitalize');
-        span_username.appendChild(document.createTextNode(data.user));
-        divContent.appendChild(span_username);
+        const div_username = document.createElement("div");
+        div_username.setAttribute('class','h2 text-capitalize d-inline text-left');
+        div_username.appendChild(document.createTextNode(data.user));
+        divContent.appendChild(div_username);
 
-        const span_rate = document.createElement("span");
-        span_rate.appendChild(document.createTextNode(`rate at ${data.rate}/5`));
-        divContent.appendChild(span_rate);
-
-        const span_date = document.createElement("span");
-        span_date.setAttribute('id','text_right');
-        span_date.appendChild(document.createTextNode(data.date));
-        divContent.appendChild(span_date);
+        const div_rate = document.createElement("div");
+        div_rate.setAttribute('class','d-inline text-center')
+        div_rate.appendChild(document.createTextNode(`rate at ${data.rate}/5`));
+        divContent.appendChild(div_rate);
 
         const div_text = document.createElement("div");
-        div_text.setAttribute('class','lead');
         div_text.appendChild(document.createTextNode(data.text));
         divContent.appendChild(div_text);
+
+        const div_date = document.createElement("div");
+        div_date.setAttribute('class','d-block text-right');
+        div_date.appendChild(document.createTextNode(data.date));
+        divContent.appendChild(div_date);
+
 
 
         
     }
 });
-            
+
+// <div class="row ml-3 mr-3">
+//                         <div class="h2 text-capitalize col">{{post.username}}</div>
+//                         <div class="col text-center"> rated at {{post.rating_scale}}/5</div>
+//                         <div class="col text-right" id="text_right">posted at {{post.created_at}}</div>
+//                     </div>
+//                     <div class="border ml-3 mb-3 mr-3 pl-3 pb-3 pr-3 pt-3">
+//                         <div>it is a very interesting book</div>
+//                     </div>
+

@@ -19,3 +19,8 @@ export DATABASE_URL='postgres://zyixysspleqiwj:b726f330c847e132a5034c34d28051dc5
 export FLASK_ENV=development
 export FLASK_APP=application.py
 #https://openlibrary.org/dev/docs/api/covers
+
+#TODO
+-personalise search for the page my_book
+-manage exception 
+-troubleshoot abort function
